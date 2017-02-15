@@ -29,8 +29,9 @@ public class Tag {
         while (rs != null){
             _startTime = new DateTime(rs.getTimestamp("startTime"));
             if (__max.isBigger(_startTime)){
-                _tag = rs.getString("Tag");
+                _tag = rs.getString("tag");
                 if (!_tag.equals("Normal")) {
+                    rs = chunk.next();
                     return "Attack";
                 }
             }
