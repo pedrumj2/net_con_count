@@ -71,7 +71,8 @@ public class InitCountTable {
     public void setConnectionRows() throws SQLException{
         DateTime _max = getMaxTime();
         DateTime _start= new DateTime(getMinTime());;
-        DateTime _end= new DateTime(_max);;
+        DateTime _end= new DateTime(getMinTime());;
+        
         boolean _flag;
         int _count = counts.getCounts(_end);
         _end.add(1);
