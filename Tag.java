@@ -26,21 +26,21 @@ public class Tag {
     public String getType(DateTime __max) throws SQLException{
         String _tag;
         DateTime _startTime;
+        String _output = "Normal";
         while (rs != null){
             _startTime = new DateTime(rs.getTimestamp("startTime"));
             if (__max.isBigger(_startTime)){
                 _tag = rs.getString("tag");
                 if (!_tag.equals("Normal")) {
-                    rs = chunk.next();
-                    return "Attack";
+                    _output = "Attack";
                 }
             }
             else{
-                return "Normal";
+                return _output;
             }
             rs = chunk.next();
         }
-        return "Normal";
+        return _output;
     }
 
 
