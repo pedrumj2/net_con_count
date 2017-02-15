@@ -1,5 +1,3 @@
-import DateTime.DateTime;
-import MySqlJava.Server;
 import MySqlJava.dbParams;
 
 public class Main {
