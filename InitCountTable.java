@@ -13,17 +13,22 @@ import java.sql.*;
 public class InitCountTable {
     private SqlConnect sqlConnect;
     private Counts counts;
+    private String database;
+    private Tag tag;
 
 
-    public InitCountTable(dbParams __dbParams) throws SQLException{
+    public InitCountTable(dbParams __dbParams, String __query) throws SQLException{
         sqlConnect = new SqlConnect(__dbParams);
-        counts = new Counts(__dbParams);
+        counts = new Counts(__dbParams,__query);
+        tag = new Tag(__dbParams, __query);
+        database = __dbParams.dbName;
     }
 
     //creates and emtpy connection count table
     public void createConnectionTable(int __interval){
-        String _query;
-        _query = "CREATE TABLE D12.con_count_" + __interval + " (\n" +
+        String _query = "Drop table if exists "+database+".con_count_"+__interval;
+        sqlConnect.updateQuery(_query);
+        _query = "CREATE TABLE "+database+".con_count_" + __interval + " (\n" +
                 "  idconcount1 INT NOT NULL AUTO_INCREMENT,\n" +
                 "  count INT NOT NULL,\n" +
                 "  tag CHAR(20) NOT NULL,\n" +
@@ -35,31 +40,34 @@ public class InitCountTable {
 
     //returns the smallest start time value of flows. This is when logging began
     private DateTime getMinTime() throws SQLException{
-        Object _res;
+
         Timestamp _timestamp;
         DateTime _output;
-        String _query = "SELECT min(startTime) as min FROM D12.labels";
-        if (sqlConnect.execGetQueryIndex(_query) == SqlConnect.SQLRET.SUCCESS) {
-            _res = sqlConnect.getValAtIndex("min", 0, SqlConnect.TYPE.TIMESTAMP);
-            _timestamp = (Timestamp)_res;
+        String _query = "SELECT min(startTime) as min FROM "+database+".labels";
+        ResultSet _rs = sqlConnect.getQuery(_query);
+        if (_rs.next()){
+            _timestamp = (Timestamp) sqlConnect.getValAtIndex(_rs, "min", 0, SqlConnect.TYPE.TIMESTAMP);
             _output = new DateTime(_timestamp);
             return _output;
+
         }
+
+
         else{
             return null;
         }
     }
     //returns the largest start time value of flows. This is when logging ended
     private DateTime getMaxTime() throws SQLException{
-        Object _res;
         Timestamp _timestamp;
         DateTime _output;
-        String _query = "SELECT max(startTime) as max FROM D12.labels";
-        if (sqlConnect.execGetQueryIndex(_query) == SqlConnect.SQLRET.SUCCESS) {
-            _res = sqlConnect.getValAtIndex("max", 0, SqlConnect.TYPE.TIMESTAMP);
-            _timestamp = (Timestamp)_res;
+        String _query = "SELECT max(startTime) as max FROM "+database+".labels";
+        ResultSet _rs = sqlConnect.getQuery(_query);
+        if (_rs.next()){
+            _timestamp = (Timestamp) sqlConnect.getValAtIndex(_rs, "max", 0, SqlConnect.TYPE.TIMESTAMP);
             _output = new DateTime(_timestamp);
             return _output;
+
         }
         else{
             return null;
@@ -72,16 +80,12 @@ public class InitCountTable {
         DateTime _max = getMaxTime();
         DateTime _start= new DateTime(getMinTime());;
         DateTime _end= new DateTime(getMinTime());;
-        
-        boolean _flag;
-        int _count = counts.getCounts(_end);
+        boolean _flag = true;
         _end.add(1);
         String _query;
-        _flag =true;
         while (_flag){
-            _query = "insert into D12.con_count_1(count, tag, startTime, endTime)" +
-                    " value("+_count+", \"Normal\", '" + _start.toString() + "', '" + _end.toString() +"')" ;
-
+            _query = "insert into "+database+".con_count_1(count, tag, startTime, endTime)" +
+                    " value("+counts.getCount(_end)+", \""+tag.getType(_end)+"\", '" + _start.toString() + "', '" + _end.toString() +"')" ;
             sqlConnect.updateQuery(_query);
             if (_start.isBigger(_max)){
                 _flag = false;
@@ -90,7 +94,7 @@ public class InitCountTable {
                 _start.add(1);
                 _end.add(1);
             }
-            _count = counts.getCounts(_end);
+
         }
     }
 }
