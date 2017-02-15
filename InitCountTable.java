@@ -27,10 +27,10 @@ public class InitCountTable {
     }
 
     //creates and emtpy connection count table
-    public void createConnectionTable(int __interval){
-        String _query = "Drop table if exists "+database+".con_count_"+__interval;
+    public void createConnectionTable(){
+        String _query = "Drop table if exists "+database+".con_count_"+interval;
         sqlConnect.updateQuery(_query);
-        _query = "CREATE TABLE "+database+".con_count_" + __interval + " (\n" +
+        _query = "CREATE TABLE "+database+".con_count_" + interval + " (\n" +
                 "  idconcount INT NOT NULL AUTO_INCREMENT,\n" +
                 "  count INT NOT NULL,\n" +
                 "  tag CHAR(20) NOT NULL,\n" +
