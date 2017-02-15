@@ -15,10 +15,12 @@ public class InitCountTable {
     private Counts counts;
     private String database;
     private Tag tag;
+    private int interval;
 
 
-    public InitCountTable(dbParams __dbParams, String __query) throws SQLException{
+    public InitCountTable(dbParams __dbParams, String __query, int __interval) throws SQLException{
         sqlConnect = new SqlConnect(__dbParams);
+        interval = __interval;
         counts = new Counts(__dbParams,__query);
         tag = new Tag(__dbParams, __query);
         database = __dbParams.dbName;
@@ -29,12 +31,12 @@ public class InitCountTable {
         String _query = "Drop table if exists "+database+".con_count_"+__interval;
         sqlConnect.updateQuery(_query);
         _query = "CREATE TABLE "+database+".con_count_" + __interval + " (\n" +
-                "  idconcount1 INT NOT NULL AUTO_INCREMENT,\n" +
+                "  idconcount INT NOT NULL AUTO_INCREMENT,\n" +
                 "  count INT NOT NULL,\n" +
                 "  tag CHAR(20) NOT NULL,\n" +
                 "  startTime DateTime NOT NULL,\n" +
                 "  endTime DateTime NOT NULL,\n" +
-                "  PRIMARY KEY (idconcount1));";
+                "  PRIMARY KEY (idconcount));";
         sqlConnect.updateQuery(_query);
     }
 
@@ -81,18 +83,18 @@ public class InitCountTable {
         DateTime _start= new DateTime(getMinTime());;
         DateTime _end= new DateTime(getMinTime());;
         boolean _flag = true;
-        _end.add(1);
+        _end.add(interval);
         String _query;
         while (_flag){
-            _query = "insert into "+database+".con_count_1(count, tag, startTime, endTime)" +
+            _query = "insert into "+database+".con_count_"+interval+"(count, tag, startTime, endTime)" +
                     " value("+counts.getCount(_end)+", \""+tag.getType(_end)+"\", '" + _start.toString() + "', '" + _end.toString() +"')" ;
             sqlConnect.updateQuery(_query);
             if (_start.isBigger(_max)){
                 _flag = false;
             }
             else{
-                _start.add(1);
-                _end.add(1);
+                _start.add(interval);
+                _end.add(interval);
             }
 
         }
