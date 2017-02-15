@@ -18,8 +18,8 @@ public class Tag {
 
     public Tag(dbParams __dbParams, String __query) throws SQLException{
         sqlConnect = new SqlConnect(__dbParams);
-        chunk = new Chunk(__dbParams, __query);
-        rs = chunk.Next();
+        chunk = new Chunk(__dbParams, __query, 1000);
+        rs = chunk.next();
     }
 
     //Determines if the current interval contains an attack or is normal
@@ -37,7 +37,7 @@ public class Tag {
             else{
                 return "Normal";
             }
-            rs = chunk.Next();
+            rs = chunk.next();
         }
         return "Normal";
     }

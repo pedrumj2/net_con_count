@@ -15,8 +15,8 @@ public class Counts {
 
     public Counts(dbParams __dbParams, String __query) throws SQLException{
         sqlConnect = new SqlConnect(__dbParams);
-        chunk = new Chunk(__dbParams, __query);
-        rs = chunk.Next();
+        chunk = new Chunk(__dbParams, __query, 1000);
+        rs = chunk.next();
     }
 
     //returns the number of flows that are smaller than __max. The lower bound is the current
@@ -32,7 +32,7 @@ public class Counts {
             else{
                 return _output;
             }
-            rs = chunk.Next();
+            rs = chunk.next();
         }
         return -1;
     }

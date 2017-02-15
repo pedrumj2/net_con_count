@@ -13,7 +13,7 @@ public class Server {
                 "group by Dest " +
                 "order by count desc " +
                 "limit 1";
-        ResultSet _rs = sqlConnect.getQuery(_query);
+        ResultSet _rs = sqlConnect.executeQuery(_query);
         if (_rs.next()){
             return (int)sqlConnect.getValAtIndex(_rs, "Dest", 0, SqlConnect.TYPE.INT );
         }
