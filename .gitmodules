@@ -1,4 +1,4 @@
 [submodule "DateTime"]
- path = DateTime url = git@github.com:pedrumj2/DateTime
+ path = DateTime url = https://github.com/pedrumj2/DateTime
 [submodule "MySqlJava"]
-	path = MySqlJava url = git@github.com:pedrumj2/MySqlJava
+	path = MySqlJava url = https://github.com/pedrumj2/MySqlJava
