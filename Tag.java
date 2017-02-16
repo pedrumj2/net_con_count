@@ -23,30 +23,22 @@ public class Tag {
     }
 
     //Determines if the current interval contains an attack or is normal
-    public String getType(DateTime __max) throws SQLException{
+    public String getType(DateTime __max) throws SQLException {
         String _tag;
         DateTime _startTime;
         String _output = "Normal";
-        while (rs != null){
+        while (rs != null) {
             _startTime = new DateTime(rs.getTimestamp("startTime"));
-            if (__max.isBigger(_startTime)){
+            if (__max.isBigger(_startTime)) {
                 _tag = rs.getString("tag");
                 if (!_tag.equals("Normal")) {
                     _output = "Attack";
                 }
-            }
-            else{
+            } else {
                 return _output;
             }
             rs = chunk.next();
         }
         return _output;
     }
-
-
-
-
-
-
-
 }
