@@ -19,6 +19,8 @@ public class Tag {
     public Tag(dbParams __dbParams, String __query) throws SQLException{
         sqlConnect = new SqlConnect(__dbParams);
         chunk = new Chunk(__dbParams, __query, 1000);
+        //remove null record
+        chunk.next();
         rs = chunk.next();
     }
 

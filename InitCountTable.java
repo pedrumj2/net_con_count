@@ -45,7 +45,8 @@ public class InitCountTable {
 
         Timestamp _timestamp;
         DateTime _output;
-        String _query = "SELECT min(startTime) as min FROM "+database+".labels";
+        String _query = "SELECT min(startTime) as min FROM "+database+".labels" +
+                "where idlabels > 1";
         ResultSet _rs = sqlConnect.executeQuery(_query);
         if (_rs.next()){
             _timestamp = (Timestamp) sqlConnect.getValAtIndex(_rs, "min", 0, SqlConnect.TYPE.TIMESTAMP);
@@ -63,7 +64,8 @@ public class InitCountTable {
     private DateTime getMaxTime() throws SQLException{
         Timestamp _timestamp;
         DateTime _output;
-        String _query = "SELECT max(startTime) as max FROM "+database+".labels";
+        String _query = "SELECT max(startTime) as max FROM "+database+".labels" +
+                "where idlabels > 1";
         ResultSet _rs = sqlConnect.executeQuery(_query);
         if (_rs.next()){
             _timestamp = (Timestamp) sqlConnect.getValAtIndex(_rs, "max", 0, SqlConnect.TYPE.TIMESTAMP);
